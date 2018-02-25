@@ -87,17 +87,17 @@ void flrFirewallLogModel::flrCreateTblFirewall()
     QString strQuery;
     //-----------------------------------------------------------------------------------
     //
-    //  Built create query
+    //  Built create query to create Firewall table
     //
     strQuery = "CREATE TABLE " + strTblNameFirewall + " (";
     strQuery.append("frwRecId integer NOT NULL, ");
     strQuery.append("frwTimestamp timestamp, ");
-    strQuery.append("frwNodeName text, ");
-    strQuery.append("frwUlogD text, ");
-    strQuery.append("frwId integer, ");
-    strQuery.append("frwSys text, ");
-    strQuery.append("frwSub text, ");
-    strQuery.append("frwName text, ");
+//    strQuery.append("frwNodeName text, ");
+//    strQuery.append("frwUlogD text, ");
+//    strQuery.append("frwId integer, ");
+//    strQuery.append("frwSys text, ");
+//    strQuery.append("frwSub text, ");
+//    strQuery.append("frwName text, ");
     strQuery.append("frwAction text, ");
     strQuery.append("frwFwRule int, ");
     strQuery.append("frwInterfaceIn text, ");
@@ -130,6 +130,10 @@ void flrFirewallLogModel::flrCreateTblFirewall()
     {
         qDebug() << sdbFirewall.lastError();
     }
-
+    strQuery = "CREATE INDEX " + strTblNameFirewall + "_time ON " + strTblNameFirewall + " (frwTimestamp);";
+    if (!qQuery.exec(strQuery))
+    {
+        qDebug() << sdbFirewall.lastError();
+    }
 
 }

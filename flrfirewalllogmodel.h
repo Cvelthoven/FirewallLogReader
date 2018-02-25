@@ -20,10 +20,11 @@ private:
 
     QString
         strDatabaseName,
-        strTblNameFirewall,
+        strFileNameIn,
         strHost,
-        strUserId,
-        strPassword;
+        strTblNameFirewall,
+        strPassword,
+        strUserId;
 
     QStringList
         stlDbDrivers,

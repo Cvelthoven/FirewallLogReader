@@ -12,6 +12,7 @@
 #include <QtSql>
 #include <QString>
 #include <QStringList>
+#include <QTextStream>
 
 #include <QDebug>
 
@@ -66,6 +67,11 @@ flrFirewallLogModel::flrFirewallLogModel()
     {
         flrCreateTblFirewall();
     }
+
+    //-----------------------------------------------------------------------------------
+    //
+    //  Load firewall logfile
+    //
 
 
 }
@@ -136,4 +142,33 @@ void flrFirewallLogModel::flrCreateTblFirewall()
         qDebug() << sdbFirewall.lastError();
     }
 
+}
+
+//---------------------------------------------------------------------------------------
+//
+//  flrCreateTblFirewall
+//
+//  Creates the table with firewall records
+//
+//    CREATE TABLE public.test
+//    (
+//      id integer NOT NULL,
+//      data text,
+//      CONSTRAINT test_pkey PRIMARY KEY (id)
+//    )
+void flrFirewallLogModel::flrLoadLogFileFirewall()
+{
+
+    strLogFileName = "FirewallInput.log";
+
+    //-----------------------------------------------------------------------------------
+    //
+    //  Open logfile
+    //
+    QFile qfiFirewallInput(strLogFileName);
+    if (!qfiFirewallInput.open(QFile::ReadOnly))
+    {
+        msgBox.setText("Failed to open firewall logfile");
+        msgBox.exec();
+    }
 }

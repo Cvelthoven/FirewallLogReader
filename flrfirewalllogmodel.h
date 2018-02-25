@@ -4,16 +4,20 @@
 #include <QSqlDatabase>
 #include <QString>
 #include <QStringList>
+#include <QTextStream>
 
 class flrFirewallLogModel
 {
 public:
     flrFirewallLogModel();
     void flrCreateTblFirewall();
+    void flrLoadLogFileFirewall();
 
 private:
     QMessageBox
         msgBox;
+
+    QTextStream tstLogFileFirewall;
 
     QSqlDatabase
         sdbFirewall;
@@ -22,6 +26,7 @@ private:
         strDatabaseName,
         strFileNameIn,
         strHost,
+        strLogFileName,
         strTblNameFirewall,
         strPassword,
         strUserId;

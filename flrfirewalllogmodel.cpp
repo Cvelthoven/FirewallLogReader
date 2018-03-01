@@ -7,6 +7,8 @@
 //
 #include "flrfirewalllogmodel.h"
 
+#include <QMessageBox>
+
 //---------------------------------------------------------------------------------------
 //
 //  Constructor
@@ -15,6 +17,28 @@
 flrFirewallLogModel::flrFirewallLogModel(QObject *parent)
     :QStandardItemModel(parent)
 {
+}
+
+//---------------------------------------------------------------------------------------
+//
+//  flrLoadLogFileFirewall
+//
+void flrFirewallLogModel::flrLoadLogFileFirewall(QString *strFirewallLogFileName)
+{
+
+    msgBox.setText(*strFirewallLogFileName);
+    msgBox.exec();
+//    strLogFileName = "FirewallInput.log";
+
+//    //-----------------------------------------------------------------------------------
+//    //
+//    //  Open logfile
+//    //
+//    QFile qfiFirewallInput(strLogFileName);
+//    if (!qfiFirewallInput.open(QFile::ReadOnly))
+//    {
+//        msgBox.setText("Failed to open firewall logfile");
+//        msgBox.exec();
 }
 
 
@@ -158,19 +182,4 @@ flrFirewallLogModel::flrFirewallLogModel(QObject *parent)
 //      data text,
 //      CONSTRAINT test_pkey PRIMARY KEY (id)
 //    )
-//void flrFirewallLogModel::flrLoadLogFileFirewall(QString *strFirewallLogFileName)
-//{
-
-//    strLogFileName = "FirewallInput.log";
-
-//    //-----------------------------------------------------------------------------------
-//    //
-//    //  Open logfile
-//    //
-//    QFile qfiFirewallInput(strLogFileName);
-//    if (!qfiFirewallInput.open(QFile::ReadOnly))
-//    {
-//        msgBox.setText("Failed to open firewall logfile");
-//        msgBox.exec();
-//    }
 //}

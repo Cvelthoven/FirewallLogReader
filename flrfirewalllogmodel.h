@@ -1,6 +1,7 @@
 #ifndef FLRFIREWALLLOGMODEL_H
 #define FLRFIREWALLLOGMODEL_H
 
+#include <QMessageBox>
 #include <QStandardItemModel>
 
 class flrFirewallLogModel : public QStandardItemModel
@@ -8,6 +9,11 @@ class flrFirewallLogModel : public QStandardItemModel
     Q_OBJECT
 public:
     flrFirewallLogModel(QObject *parent);
+    void flrLoadLogFileFirewall(QString *strFirewallLogFileName);
+
+private:
+    QMessageBox
+        msgBox;
 
 };
 
@@ -31,11 +37,8 @@ public:
 //#include <QTextStream>
 
 //void flrCreateTblFirewall();
-//void flrLoadLogFileFirewall(QString *strFirewallLogFileName);
 
-//private:
-//QMessageBox
-//    msgBox;
+
 
 //QTextStream tstLogFileFirewall;
 

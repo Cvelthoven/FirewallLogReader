@@ -7,7 +7,7 @@
 #include "ui_mainwindow.h"
 #include "flrfirewalllogmodel.h"
 
-
+#include <QFileDialog>
 #include <QTableView>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -24,3 +24,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+//---------------------------------------------------------------------------------------
+//
+//  File->Exit
+//
+void MainWindow::on_actionExit_triggered()
+{
+   exit(0);
+}
+
+//---------------------------------------------------------------------------------------
+//
+//  Firewall->Load logfile
+//
+void MainWindow::on_actionLoad_logfile_triggered()
+{
+    strFirewallLogFileName = QFileDialog::getOpenFileName(this,tr("Open Filewall logfile"));
+    FirewallLogModel->flrLoadLogFileFirewall(&strFirewallLogFileName);
+
+}

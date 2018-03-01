@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    flrfirewalllogmodel.cpp
+    flrfirewalllogmodel.cpp \
+    flrfirewalllogview.cpp
 
 HEADERS += \
         mainwindow.h \
-    flrfirewalllogmodel.h
+    flrfirewalllogmodel.h \
+    flrfirewalllogview.h
 
 FORMS += \
         mainwindow.ui

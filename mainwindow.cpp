@@ -8,6 +8,7 @@
 #include "flrfirewalllogmodel.h"
 
 #include <QFileDialog>
+#include <QString>
 #include <QTableView>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -40,6 +41,20 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::on_actionLoad_logfile_triggered()
 {
     strFirewallLogFileName = QFileDialog::getOpenFileName(this,tr("Open Filewall logfile"));
-    FirewallLogModel->flrLoadLogFileFirewall(&strFirewallLogFileName);
+    if (strFirewallLogFileName.length() != 0)
+        FirewallLogModel->flrLoadLogFileFirewall(&strFirewallLogFileName);
 
+}
+
+void MainWindow::on_actionConnect_DB_triggered()
+{
+    //-----------------------------------------------------------------------------------
+    //
+    //  Get and set settings
+    //
+    strDatabaseName = "vmdevdb01";
+    strHost = "localhost";
+    strUserId = "vmlindev01admin";
+    strPassword = "#NS01fr#LDrz76#";
+    FirewallLogModel->flrConnectDB(&strDatabaseName,&strHost,&strUserId,&strPassword);
 }

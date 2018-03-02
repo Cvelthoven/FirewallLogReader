@@ -23,12 +23,20 @@ private slots:
 
     void on_actionLoad_logfile_triggered();
 
+    void on_actionConnect_DB_triggered();
+
 private:
     Ui::MainWindow *ui;
 
     flrFirewallLogModel *FirewallLogModel;
 
-    QString strFirewallLogFileName;
+    QString
+        strDatabaseName,
+        strHost,
+        strFirewallLogFileName,
+        strUserId,
+        strPassword;
+
 };
 
 #endif // MAINWINDOW_H

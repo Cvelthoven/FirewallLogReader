@@ -10,6 +10,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QSqlDatabase>
+#include <QTextStream>
 #include <QtSql>
 
 //---------------------------------------------------------------------------------------
@@ -68,6 +69,16 @@ void flrFirewallLogModel::flrConnectDB(QString *strDatabaseName, QString *strHos
 
 //---------------------------------------------------------------------------------------
 //
+//  flrConvertLineToRecord
+//
+void flrFirewallLogModel::flrConvertLineToRecord(QString *strLogInputLine)
+{
+
+}
+
+
+//---------------------------------------------------------------------------------------
+//
 //  flrCreateTblFirewall
 //
 //  Creates the table with firewall records
@@ -86,35 +97,35 @@ void flrFirewallLogModel::flrCreateTblFirewall(QString *flrTableName)
     //  Built create query to create Firewall table
     //
     strQuery = "CREATE TABLE " + *flrTableName + " (";
-    strQuery.append("frwRecId integer NOT NULL, ");
-    strQuery.append("frwTimestamp timestamp, ");
+    strQuery.append(strFldfrwRecId + " integer NOT NULL, ");
+    strQuery.append(strFldfrwTimestamp + " timestamp, ");
 //    strQuery.append("frwNodeName text, ");
 //    strQuery.append("frwUlogD text, ");
 //    strQuery.append("frwId integer, ");
 //    strQuery.append("frwSys text, ");
 //    strQuery.append("frwSub text, ");
 //    strQuery.append("frwName text, ");
-    strQuery.append("frwAction text, ");
-    strQuery.append("frwFwRule int, ");
-    strQuery.append("frwInterfaceIn text, ");
-    strQuery.append("frwInterfaceOut text, ");
-    strQuery.append("frwSourceMac text, ");
-    strQuery.append("frwSourceIp text, ");
-    strQuery.append("frwSourcePort integer, ");
-    strQuery.append("frwDestMac text, ");
-    strQuery.append("frwDestIp text, ");
-    strQuery.append("frwDestPort integer, ");
-    strQuery.append("frwMark text, ");
-    strQuery.append("frwApp text, ");
-    strQuery.append("frwProtocol text, ");
-    strQuery.append("frwLength text, ");
-    strQuery.append("frwTos text, ");
-    strQuery.append("frwPrec text, ");
-    strQuery.append("frwTtl text, ");
-    strQuery.append("frwTcpFlags text, ");
-    strQuery.append("frwType text, ");
-    strQuery.append("frwCode text, ");
-    strQuery.append("CONSTRAINT " + *flrTableName + "_pkey PRIMARY KEY (frwRecId)");
+    strQuery.append(strFldfrwAction + " text, ");
+    strQuery.append(strFldfrwFwRule + " int, ");
+    strQuery.append(strFldfrwInterfaceIn + " text, ");
+    strQuery.append(strFldfrwInterfaceOut + " text, ");
+    strQuery.append(strFldfrwSourceMac + " text, ");
+    strQuery.append(strFldfrwSourceIp + " text, ");
+    strQuery.append(strFldfrwSourcePort + " integer, ");
+    strQuery.append(strFldfrwDestMac + " text, ");
+    strQuery.append(strFldfrwDestIp + " text, ");
+    strQuery.append(strFldfrwDestPort + " integer, ");
+    strQuery.append(strFldfrwMark + " text, ");
+    strQuery.append(strFldfrwApp + " text, ");
+    strQuery.append(strFldfrwProtocol + " text, ");
+    strQuery.append(strFldfrwLength + " text, ");
+    strQuery.append(strFldfrwTos + " text, ");
+    strQuery.append(strFldfrwPrec + " text, ");
+    strQuery.append(strFldfrwTtl + " text, ");
+    strQuery.append(strFldfrwTcpFlags + " text, ");
+    strQuery.append(strFldfrwType + " text, ");
+    strQuery.append(strFldfrwCode + " text, ");
+    strQuery.append("CONSTRAINT " + *flrTableName + "_pkey PRIMARY KEY (" + strFldfrwRecId + ")");
     strQuery.append(");");
 
     //-----------------------------------------------------------------------------------
@@ -126,7 +137,7 @@ void flrFirewallLogModel::flrCreateTblFirewall(QString *flrTableName)
     {
         qDebug() << sdbFirewall.lastError();
     }
-    strQuery = "CREATE INDEX " + *flrTableName + "_time ON " + *flrTableName + " (frwTimestamp);";
+    strQuery = "CREATE INDEX " + *flrTableName + "_time ON " + *flrTableName + " (" + strFldfrwTimestamp + ");";
     if (!qQuery.exec(strQuery))
     {
         qDebug() << sdbFirewall.lastError();
@@ -141,15 +152,37 @@ void flrFirewallLogModel::flrCreateTblFirewall(QString *flrTableName)
 //
 void flrFirewallLogModel::flrLoadLogFileFirewall(QString *strFirewallLogFileName)
 {
+    QString
+        strFirewallInputLine;
 
     //-----------------------------------------------------------------------------------
     //
     //  Open logfile
     //
     QFile qfiFirewallInput(*strFirewallLogFileName);
-    if (!qfiFirewallInput.open(QFile::ReadOnly))
+    if (qfiFirewallInput.open(QIODevice::ReadOnly|QIODevice::Text))
+    {
+        //-------------------------------------------------------------------------------
+        //
+        //  Process file line by line
+        //
+        QTextStream qtsFirewallInput(&qfiFirewallInput);
+        while (!qtsFirewallInput.atEnd())
+        {
+            strFirewallInputLine = qtsFirewallInput.readLine();
+            flrConvertLineToRecord(&strFirewallInputLine);
+        }
+    }
+    else
     {
         msgBox.setText("Failed to open firewall logfile");
         msgBox.exec();
     }
+
+
+    //-----------------------------------------------------------------------------------
+    //
+    //  Close logfile
+    //
+    qfiFirewallInput.close();
 }

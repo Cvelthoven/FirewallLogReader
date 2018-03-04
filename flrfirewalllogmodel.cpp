@@ -12,6 +12,8 @@
 #include <QSqlDatabase>
 #include <QTextStream>
 #include <QtSql>
+#include <QString>
+#include <QStringList>
 
 //---------------------------------------------------------------------------------------
 //
@@ -73,6 +75,46 @@ void flrFirewallLogModel::flrConnectDB(QString *strDatabaseName, QString *strHos
 //
 void flrFirewallLogModel::flrConvertLineToRecord(QString *strLogInputLine)
 {
+    int iFieldCnt = 0,
+        iFieldLenght,
+        iInputLineLength,
+        iInLineUsed = 0;
+
+    QString strTemp;
+
+    QStringList stlField;
+
+    //-----------------------------------------------------------------------------------
+    //
+    //  Get all fields in inputline
+    //
+    iInputLineLength = strLogInputLine->size();
+    while (iInLineUsed < iInputLineLength)
+    {
+        strTemp = strLogInputLine->section(" ",iFieldCnt,iFieldCnt);
+        stlField.append(strTemp);
+        iFieldLenght = strTemp.size();
+        iInLineUsed += iFieldLenght + 1;
+        iFieldCnt++;
+    }
+
+    //-----------------------------------------------------------------------------------
+    //
+    //  Process fixed fields
+    //
+    strTemp = stlField.at(0);
+    strTemp = stlField.at(8);
+    strTemp = stlField.at(10);
+
+    //-----------------------------------------------------------------------------------
+    //
+    //  Process remaining fields
+    //
+    for (iFieldCnt = 11; iFieldCnt < stlField.size();iFieldCnt++)
+    {
+        strTemp = stlField.at(iFieldCnt);
+    }
+
 
 }
 

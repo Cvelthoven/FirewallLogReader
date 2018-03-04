@@ -7,6 +7,8 @@
 //
 #include "flrfirewalllogmodel.h"
 
+#include <QDate>
+#include <QDateTime>
 #include <QFile>
 #include <QMessageBox>
 #include <QSqlDatabase>
@@ -14,6 +16,7 @@
 #include <QtSql>
 #include <QString>
 #include <QStringList>
+#include <QTime>
 
 //---------------------------------------------------------------------------------------
 //
@@ -78,7 +81,13 @@ void flrFirewallLogModel::flrConvertLineToRecord(QString *strLogInputLine)
     int iFieldCnt = 0,
         iFieldLenght,
         iInputLineLength,
-        iInLineUsed = 0;
+        iInLineUsed = 0,
+        iYear,
+        iMonth,
+        iDay,
+        iHour,
+        iMin,
+        iSec;
 
     QString strTemp;
 
@@ -102,7 +111,18 @@ void flrFirewallLogModel::flrConvertLineToRecord(QString *strLogInputLine)
     //
     //  Process fixed fields
     //
+    //  Timestamp
+    //  2017:12:26-00:00:02
     strTemp = stlField.at(0);
+    strTemp.replace("-",":");
+    iYear     = strTemp.section(":",0,0).toInt();
+    iMonth    = strTemp.section(":",1,1).toInt();
+    iDay      = strTemp.section(":",2,2).toInt();
+    iHour     = strTemp.section(":",3,3).toInt();
+    iMin      = strTemp.section(":",4,4).toInt();
+    iSec      = strTemp.section(":",5,5).toInt();
+    QDateTime qdtTimeStamp (QDate(iYear,iMonth,iDay),QTime(iHour,iMin,iSec));
+
     strTemp = stlField.at(8);
     strTemp = stlField.at(10);
 
@@ -115,6 +135,7 @@ void flrFirewallLogModel::flrConvertLineToRecord(QString *strLogInputLine)
         strTemp = stlField.at(iFieldCnt);
     }
 
+    // INSERT INTO table (field1, field2) VALUES (1,eeee);
 
 }
 
@@ -139,7 +160,7 @@ void flrFirewallLogModel::flrCreateTblFirewall(QString *flrTableName)
     //  Built create query to create Firewall table
     //
     strQuery = "CREATE TABLE " + *flrTableName + " (";
-    strQuery.append(strFldfrwRecId + " integer NOT NULL, ");
+    strQuery.append(strFldfrwRecId + " SERIAL, ");
     strQuery.append(strFldfrwTimestamp + " timestamp, ");
 //    strQuery.append("frwNodeName text, ");
 //    strQuery.append("frwUlogD text, ");

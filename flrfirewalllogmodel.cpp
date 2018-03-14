@@ -31,6 +31,29 @@ flrFirewallLogModel::flrFirewallLogModel(QObject *parent)
 
 //---------------------------------------------------------------------------------------
 //
+//  flrAppendQuery
+//
+void flrFirewallLogModel::flrAppendQuery(QString *strQueryP1,QString *strQueryP2)
+{
+    //-----------------------------------------------------------------------------------
+    //
+    //  Built Query part 1
+    //
+    strQueryPart1.append(",");
+    strQueryPart1.append(strQueryP1);
+
+    //-----------------------------------------------------------------------------------
+    //
+    //  Built Query part 2
+    //
+    strQueryPart2.append(",\'");
+    strQueryPart2.append(strQueryP2);
+    strQueryPart2.append("\'");
+}
+
+
+//---------------------------------------------------------------------------------------
+//
 //  flrLoadLogFileFirewall
 //
 void flrFirewallLogModel::flrConnectDB(QString *strDatabaseName, QString *strHostName, QString *strUserId, QString *strPassword)
@@ -62,8 +85,6 @@ void flrFirewallLogModel::flrConnectDB(QString *strDatabaseName, QString *strHos
     //  Check tables
     //  Table names are all in lowercase
     //
-    strTblNameFirewall = "flrfirewalllog";
-
     stlDbTables = sdbFirewall.tables();
     if (!stlDbTables.contains(strTblNameFirewall))
     {
@@ -76,12 +97,17 @@ void flrFirewallLogModel::flrConnectDB(QString *strDatabaseName, QString *strHos
 //
 //  flrConvertLineToRecord
 //
-void flrFirewallLogModel::flrConvertLineToRecord(QString *strLogInputLine)
+int flrFirewallLogModel::flrConvertLineToRecord(QString *strLogInputLine)
 {
-    int iFieldCnt = 0,
+    int
+        iSourcePortVal,
+        iDestPortVal,
+        iFieldCnt = 0,
         iFieldLenght,
+        iFwRuleNumber,
         iInputLineLength,
         iInLineUsed = 0,
+        iReturnCode = 0,
         iYear,
         iMonth,
         iDay,
@@ -89,7 +115,26 @@ void flrFirewallLogModel::flrConvertLineToRecord(QString *strLogInputLine)
         iMin,
         iSec;
 
-    QString strTemp;
+    QString strActionVal,
+            strInterfaceInVal,
+            strInterfaceOutVal,
+            strSourceMacVal,
+            strSourceIpVal,
+            strDestMacVal,
+            strDestIpVal,
+            strMarkVal,
+            strAppVal,
+            strProtocolVal,
+            strLengthVal,
+            strTosVal,
+            strPrecVal,
+            strTtlVal,
+            strTcpFlagsVal,
+            strTypeVal,
+            strCodeVal,
+            strFieldName,
+            strQuery,
+            strTemp;
 
     QStringList stlField;
 
@@ -107,12 +152,18 @@ void flrFirewallLogModel::flrConvertLineToRecord(QString *strLogInputLine)
         iFieldCnt++;
     }
 
+    //----------------------------------------------------------------------------------
+    //
+    //  Initialize query parts
+    strQueryPart1 = "INSERT INTO " + strTblNameFirewall + " (";
+    strQueryPart2 = ") VALUES (";
+
     //-----------------------------------------------------------------------------------
     //
     //  Process fixed fields
     //
     //  Timestamp
-    //  2017:12:26-00:00:02
+    //  First argument
     strTemp = stlField.at(0);
     strTemp.replace("-",":");
     iYear     = strTemp.section(":",0,0).toInt();
@@ -122,21 +173,146 @@ void flrFirewallLogModel::flrConvertLineToRecord(QString *strLogInputLine)
     iMin      = strTemp.section(":",4,4).toInt();
     iSec      = strTemp.section(":",5,5).toInt();
     QDateTime qdtTimeStamp (QDate(iYear,iMonth,iDay),QTime(iHour,iMin,iSec));
+    strTemp = qdtTimeStamp.toString();
+    strQueryPart1.append(strFldfrwTimestamp);
+    strQueryPart2.append("\'");
+    strQueryPart2.append(strTemp);
+    strQueryPart2.append("\'");
 
+    //
+    //  Action
+    //
     strTemp = stlField.at(8);
+    strActionVal = strTemp.section("\"",0,0);
+    flrAppendQuery(&strFldfrwAction,&strActionVal);
+
+    //
+    //  Firewall rule number
+    //
     strTemp = stlField.at(10);
+    iFwRuleNumber = strTemp.section("\"",1,1).toInt();
+    strTemp = QString("%1").arg(iFwRuleNumber);
+    flrAppendQuery(&strFldfrwFwRule,&strTemp);
 
     //-----------------------------------------------------------------------------------
     //
-    //  Process remaining fields
-    //
-    for (iFieldCnt = 11; iFieldCnt < stlField.size();iFieldCnt++)
+    //  Exclude default rules 60001,60002 and 60003
+    if (!((iFwRuleNumber == 60001)||(iFwRuleNumber == 60002)||(iFwRuleNumber == 60003)))
     {
-        strTemp = stlField.at(iFieldCnt);
+
+        //-------------------------------------------------------------------------------
+        //
+        //  Process remaining fields
+        //
+        for (iFieldCnt = 11; iFieldCnt < stlField.size();iFieldCnt++)
+        {
+            strTemp = stlField.at(iFieldCnt);
+            strFieldName = strTemp.section("=",0,0);
+            if (strFieldName == "app")
+            {
+                strAppVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwApp,&strAppVal);
+            }
+            if (strFieldName == "code")
+            {
+                strCodeVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwCode,&strCodeVal);
+            }
+            if (strFieldName == "dstip")
+            {
+                strDestIpVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwDestIp,&strDestIpVal);
+            }
+            if (strFieldName == "dstmac")
+            {
+                strDestMacVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwDestMac,&strDestMacVal);
+            }
+            if (strFieldName == "dstport")
+            {
+                iDestPortVal = strTemp.section("\"",1,1).toInt();
+                strTemp = QString("%1").arg(iDestPortVal);
+                flrAppendQuery(&strFldfrwDestPort,&strTemp);
+            }
+            if (strFieldName == "initf")
+            {
+                strInterfaceInVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwInterfaceIn,&strInterfaceInVal);
+            }
+            if (strFieldName == "length")
+            {
+                strLengthVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwLength,&strLengthVal);
+            }
+            if (strFieldName == "mark")
+            {
+                strMarkVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwMark,&strMarkVal);
+            }
+
+
+
+
+
+            if (strFieldName == "outitf")
+            {
+                strInterfaceOutVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwApp,&strAppVal);
+            }
+            if (strFieldName == "prec")
+            {
+                strPrecVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwApp,&strAppVal);
+            }
+            if (strFieldName == "proto")
+            {
+                strProtocolVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwApp,&strAppVal);
+            }
+            if (strFieldName == "srcip")
+            {
+                strSourceIpVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwApp,&strAppVal);
+            }
+            if (strFieldName == "srcmac")
+            {
+                strSourceMacVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwApp,&strAppVal);
+            }
+            if (strFieldName == "srcport")
+            {
+                iSourcePortVal = strTemp.section("\"",1,1).toInt();
+                flrAppendQuery(&strFldfrwApp,&strAppVal);
+            }
+            if (strFieldName == "tcpflags")
+            {
+                strTcpFlagsVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwApp,&strAppVal);
+            }
+            if (strFieldName == "tos")
+            {
+                strTosVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwApp,&strAppVal);
+            }
+            if (strFieldName == "ttl")
+            {
+                strTtlVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwApp,&strAppVal);
+            }
+            if (strFieldName == "type")
+            {
+                strTypeVal = strTemp.section("\"",1,1);
+                flrAppendQuery(&strFldfrwApp,&strAppVal);
+            }
+        }
+        // INSERT INTO table (field1, field2) VALUES (1,eeee);
+        strQueryPart2.append(");");
+        strQuery = strQueryPart1 + strQueryPart2;
+
+        iReturnCode = 1;
     }
 
-    // INSERT INTO table (field1, field2) VALUES (1,eeee);
-
+    return(iReturnCode);
 }
 
 
@@ -215,6 +391,10 @@ void flrFirewallLogModel::flrCreateTblFirewall(QString *flrTableName)
 //
 void flrFirewallLogModel::flrLoadLogFileFirewall(QString *strFirewallLogFileName)
 {
+    int iTotalLines = 0,
+        iTotalRecords = 0;
+
+
     QString
         strFirewallInputLine;
 
@@ -233,7 +413,8 @@ void flrFirewallLogModel::flrLoadLogFileFirewall(QString *strFirewallLogFileName
         while (!qtsFirewallInput.atEnd())
         {
             strFirewallInputLine = qtsFirewallInput.readLine();
-            flrConvertLineToRecord(&strFirewallInputLine);
+            iTotalRecords = iTotalRecords + flrConvertLineToRecord(&strFirewallInputLine);
+            iTotalLines++;
         }
     }
     else

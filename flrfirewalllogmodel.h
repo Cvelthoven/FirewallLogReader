@@ -13,8 +13,9 @@ class flrFirewallLogModel : public QStandardItemModel
     Q_OBJECT
 public:
     flrFirewallLogModel(QObject *parent);
+    void flrAppendQuery(QString *strQueryP1, QString *strQueryP2);
     void flrConnectDB(QString *strDatabaseName, QString *strHostName, QString *strUserId, QString *strPassword);
-    void flrConvertLineToRecord(QString *strLogInputLine);
+    int flrConvertLineToRecord(QString *strLogInputLine);
     void flrCreateTblFirewall(QString *flrTableName);
     void flrLoadLogFileFirewall(QString *strFirewallLogFileName);
 
@@ -26,7 +27,7 @@ private:
         msgBox;
 
     QString
-        strTblNameFirewall,
+        strTblNameFirewall = "flrfirewalllog",
         strFldfrwRecId =  "frwRecId",
         strFldfrwTimestamp = "frwTimestamp",
         strFldfrwAction = "frwAction",
@@ -48,7 +49,9 @@ private:
         strFldfrwTtl = "frwTtl",
         strFldfrwTcpFlags = "frwTcpFlags",
         strFldfrwType = "frwType",
-        strFldfrwCode = "frwCode";
+        strFldfrwCode = "frwCode",
+        strQueryPart1,
+        strQueryPart2;
 
     QStringList
         stlDbDrivers,

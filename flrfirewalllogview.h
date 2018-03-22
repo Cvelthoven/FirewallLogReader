@@ -1,12 +1,17 @@
 #ifndef FLRFIREWALLLOGVIEW_H
 #define FLRFIREWALLLOGVIEW_H
 
+#include <QStandardItemModel>
 #include <QObject>
 
-class flrFirewallLogView
+class flrFirewallLogView : public QStandardItemModel
 {
 public:
-    flrFirewallLogView();
+    flrFirewallLogView(QObject *parent);
+
+private:
+    void initializeView();
+
 };
 
 #endif // FLRFIREWALLLOGVIEW_H

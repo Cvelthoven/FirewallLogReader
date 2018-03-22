@@ -3,8 +3,10 @@
 
 #include <QMainWindow>
 #include <QString>
+#include <QTableView>
 
 #include "flrfirewalllogmodel.h"
+#include "flrfirewalllogview.h"
 
 namespace Ui {
 class MainWindow;
@@ -26,6 +28,8 @@ private slots:
     void on_actionConnect_DB_triggered();
 
 private:
+    void createModelAndView();
+
     Ui::MainWindow *ui;
 
     flrFirewallLogModel *FirewallLogModel;
@@ -36,6 +40,9 @@ private:
         strFirewallLogFileName,
         strUserId,
         strPassword;
+
+    flrFirewallLogView
+        *FirewallLogView;
 
 };
 

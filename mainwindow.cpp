@@ -6,16 +6,18 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "flrfirewalllogmodel.h"
+#include "flrfirewalllogview.h"
 
 #include <QFileDialog>
 #include <QString>
+#include <QTableView>
 #include <QTableView>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-   FirewallLogModel = new flrFirewallLogModel(this);
+    createModelAndView();
 
     ui->setupUi(this);
 }
@@ -27,6 +29,22 @@ MainWindow::~MainWindow()
 
 //---------------------------------------------------------------------------------------
 //
+//  createModelAndView
+//
+void MainWindow::createModelAndView()
+{
+    FirewallLogView = new flrFirewallLogView(this);
+
+//    FirewallLogView = new QTableView;
+//    FirewallLogModel = new flrFirewallLogModel(this);
+//    FirewallLogView->setModel(FirewallLogModel);
+//    setCentralWidget(FirewallLogView);
+
+}
+
+//---------------------------------------------------------------------------------------
+//
+//  Menu items
 //  File->Exit
 //
 void MainWindow::on_actionExit_triggered()

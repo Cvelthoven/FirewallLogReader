@@ -11,14 +11,12 @@
 #include <QFileDialog>
 #include <QString>
 #include <QTableView>
-#include <QTableView>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    createModelAndView();
-
+   FirewallLogModel = new flrFirewallLogModel(this);
     ui->setupUi(this);
 }
 
@@ -33,12 +31,6 @@ MainWindow::~MainWindow()
 //
 void MainWindow::createModelAndView()
 {
-    FirewallLogView = new flrFirewallLogView(this);
-
-//    FirewallLogView = new QTableView;
-//    FirewallLogModel = new flrFirewallLogModel(this);
-//    FirewallLogView->setModel(FirewallLogModel);
-//    setCentralWidget(FirewallLogView);
 
 }
 

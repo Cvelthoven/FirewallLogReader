@@ -54,7 +54,6 @@ private:
         strQueryPart2;
 
     QStringList
-        stlDbDrivers,
         stlDbTables;
 
 };

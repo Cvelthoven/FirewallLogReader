@@ -24,7 +24,7 @@
 //
 //
 flrFirewallLogModel::flrFirewallLogModel(QObject *parent)
-    :QStandardItemModel(parent)
+    : QStandardItemModel(parent)
 {
 }
 
@@ -58,6 +58,9 @@ void flrFirewallLogModel::flrAppendQuery(QString *strQueryP1,QString *strQueryP2
 //
 void flrFirewallLogModel::flrConnectDB(QString *strDatabaseName, QString *strHostName, QString *strUserId, QString *strPassword)
 {
+QStringList
+        stlDbDrivers;
+
     //-----------------------------------------------------------------------------------
     //
     //  Connect to database

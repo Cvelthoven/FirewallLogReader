@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------------------
 //
-//  flrFirewallLogVies
+//  flrFirewallLogView
 //
 //  Class containing the presentatie layer of firewall log items
 //

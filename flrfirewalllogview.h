@@ -6,6 +6,7 @@
 
 class flrFirewallLogView : public QStandardItemModel
 {
+//    Q_OBJECT
 public:
     flrFirewallLogView(QObject *parent);
 

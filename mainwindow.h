@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSettings>
 #include <QString>
 #include <QTableView>
 
@@ -29,6 +30,9 @@ private slots:
 
 private:
     void createModelAndView();
+    void dbConnect();
+    void IntializeProgram();
+    void setDefaultSettings();
 
     Ui::MainWindow *ui;
 

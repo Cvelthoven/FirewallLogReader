@@ -83,7 +83,7 @@ void MainWindow::on_actionConnect_DB_triggered()
 
 //---------------------------------------------------------------------------------------
 //
-//  Intialize program settings
+//  Connect to the database
 //
 void MainWindow::dbConnect()
 {

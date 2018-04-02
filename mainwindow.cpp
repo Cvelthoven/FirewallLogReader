@@ -7,6 +7,7 @@
 #include "ui_mainwindow.h"
 #include "flrfirewalllogmodel.h"
 #include "flrfirewalllogview.h"
+#include "flrlogfile.h"
 
 #include <QGuiApplication>
 #include <QFileDialog>
@@ -18,6 +19,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    ApplicationSettings = new flrApplicationSettings();
+    QString strtemp2 = "DatabaseName";
+    QString strtemp = ApplicationSettings->flrGetAppSetting(&strtemp2);
+    Logfile = new flrLogFile(this);
     FirewallLogModel = new flrFirewallLogModel(this);
     IntializeProgram();
     ui->setupUi(this);
@@ -111,9 +116,9 @@ void MainWindow::IntializeProgram()
     //
     //  Set application environment definitions
     //
-    QCoreApplication::setOrganizationName("CVelthoven");
-    QCoreApplication::setOrganizationDomain("CVelthoven.com");
-    QCoreApplication::setApplicationName("FirewallLogReader");
+//    QCoreApplication::setOrganizationName("CVelthoven");
+//    QCoreApplication::setOrganizationDomain("CVelthoven.com");
+//    QCoreApplication::setApplicationName("FirewallLogReader");
 
     //-----------------------------------------------------------------------------------
     //

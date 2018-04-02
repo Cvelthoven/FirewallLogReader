@@ -28,13 +28,15 @@ SOURCES += \
         mainwindow.cpp \
     flrfirewalllogmodel.cpp \
     flrfirewalllogview.cpp \
-    flrlogfile.cpp
+    flrlogfile.cpp \
+    flrapplicationsettings.cpp
 
 HEADERS += \
         mainwindow.h \
     flrfirewalllogmodel.h \
     flrfirewalllogview.h \
-    flrlogfile.h
+    flrlogfile.h \
+    flrapplicationsettings.h
 
 FORMS += \
         mainwindow.ui

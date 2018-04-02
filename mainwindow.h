@@ -5,8 +5,10 @@
 #include <QString>
 #include <QTableView>
 
+#include "flrapplicationsettings.h"
 #include "flrfirewalllogmodel.h"
 #include "flrfirewalllogview.h"
+#include "flrlogfile.h"
 
 namespace Ui {
 class MainWindow;
@@ -35,7 +37,9 @@ private:
 
     Ui::MainWindow *ui;
 
+    flrApplicationSettings *ApplicationSettings;
     flrFirewallLogModel *FirewallLogModel;
+    flrLogFile *Logfile;
 
     QString
         strDatabaseName,

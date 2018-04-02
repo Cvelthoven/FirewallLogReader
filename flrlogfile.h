@@ -9,10 +9,10 @@
 
 #include <QObject>
 
-class flrLogFIle
+class flrLogFile
 {
 public:
-    flrLogFIle();
+    flrLogFile(QObject *parent);
 };
 
 #endif // FLRLOGFILE_H
